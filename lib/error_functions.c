@@ -3,8 +3,8 @@
 #include "tlpi_hdr.h"
 #include "ename.c.inc"
 
-#ifndef __GNUC__
-__attrubute__ ((__noreturn__))
+#ifdef __GNUC__
+__attribute__ ((__noreturn__))
 #endif
 
 static void terminate(Boolean useExit3) {
@@ -45,7 +45,7 @@ static void outputError(Boolean useErr, int err, Boolean flushStdout,
 
 void errMsg(const char* format, ...) {
 	va_list argList;
-	int savedErrno;
+	in\t savedErrno;
 
 	savedErrno = errno;
 
