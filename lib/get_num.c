@@ -5,7 +5,7 @@
 #include <errno.h>
 #include "get_num.h"
 
-static void gnFail(const char* fname, const char* msg, const char* tag, const char* name) {
+static void gnFail(const char* fname, const char* msg, const char* arg, const char* name) {
 	fprintf(stderr, "%s error", fname);
 	if (name != NULL) {
 		fprintf(stderr, " (in %s)", name);

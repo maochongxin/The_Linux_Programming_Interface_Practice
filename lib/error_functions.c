@@ -27,7 +27,7 @@ static void outputError(Boolean useErr, int err, Boolean flushStdout,
 #define BUF_SIZE 500
 	char buf[BUF_SIZE], userMsg[BUF_SIZE], errText[BUF_SIZE];
 
-	vsprintf(userMsg, BUF_SIZE, format, ap);
+	vsnprintf(userMsg, BUF_SIZE, format, ap);
 
 	if (useErr) {
 		snprintf(errText, BUF_SIZE, " [%s %s]",
@@ -36,8 +36,14 @@ static void outputError(Boolean useErr, int err, Boolean flushStdout,
 	} else {
 		snprintf(errText, BUF_SIZE, ":");
 	}
-	snprintf(buf, BUF_SIZE, "ERROR%s %s\n", errText, userMsg);
-
+#if __GNUC__ >= 7
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-truncation"
+#endif
+    snprintf(buf, BUF_SIZE, "ERROR%s %s\n", errText, userMsg);
+#if __GNUC__ >= 7
+#pragma GCC diagnostic pop
+#endif
 	if (flushStdout) { fflush(stdout); }
 	fputs(buf, stderr);
 	fflush(stderr);
@@ -45,7 +51,7 @@ static void outputError(Boolean useErr, int err, Boolean flushStdout,
 
 void errMsg(const char* format, ...) {
 	va_list argList;
-	in\t savedErrno;
+	int savedErrno;
 
 	savedErrno = errno;
 
@@ -57,7 +63,7 @@ void errMsg(const char* format, ...) {
 }
 
 void errExit(const char* format, ...) {
-	va_list argList
+	va_list argList;
 
 	va_start(argList, format);
 	outputError(TRUE, errno, TRUE, format, argList);
@@ -103,7 +109,7 @@ void usageErr(const char* format, ...) {
 
 	fprintf(stderr, "Usage: ");
 	va_start(argList, format);
-	vprintf(stderr, format, argList);
+	vfprintf(stderr, format, argList);
 	va_end(argList);
 
 	fflush(stderr);
@@ -117,7 +123,7 @@ void cmdLineErr(const char* format, ...) {
 
 	fprintf(stderr, "Command-line usage error:");
 	va_start(argList, format);
-	vprintf(stderr, format, argList);
+	vfprintf(stderr, format, argList);
 	va_end(argList);
 
 	fflush(stderr);
