@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
 	if (inputFd == -1) {
 		errExit("opening files %s", argv[1]);
 	}
-
+	// 控制权限
 	openFlags = O_CREAT | O_WRONLY | O_TRUNC;
 	filePerms = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP |
 				S_IROTH | S_IWOTH;
